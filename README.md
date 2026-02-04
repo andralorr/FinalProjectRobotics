@@ -1,56 +1,41 @@
-### Speed monitoring system for an autonomous line-follower robot
+## Arduino Rhythm Game
 
-This project implements a simple robotic system that simulates a traffic speed monitoring scenario. The system consists of an autonomous mobile robot and a fixed monitoring station. The robot follows a predefined road using infrared sensors and DC motors, while its speed is adjusted manually through an analog input.
+This project implements an interactive embedded gaming console inspired by rhythm-based games such as Piano Tiles and Guitar Hero. The goal of the system is to test the user’s reflexes and synchronization skills using a combination of visual and audio feedback.
 
-The monitoring station detects the robot as it passes through a defined section of the road and calculates its speed based on the time measured between two infrared sensors placed at a known distance. If the calculated speed exceeds a user-defined limit, the system provides immediate visual and sound feedback.
+The console is built around a linear array of LEDs, each associated with a push button. During gameplay, the system generates a sequence of visual cues by lighting up the LEDs in synchronization with a musical melody played through a buzzer. The player must press the correct button within a predefined time window in order to score points. If the input is incorrect or too late, the player loses a life.
 
-The project focuses on basic robotics concepts such as sensor usage, motor control, timing, and real-time feedback, and is designed to be clear, reliable, and suitable for an introductory robotics course.
+The software architecture is based on a Finite State Machine, which manages the main game states: Menu, Gameplay and Game Over. In the Menu state, the user selects the desired difficulty level: Easy, Medium or Hard. Each difficulty level corresponds to a different set of melodies and gameplay parameters.
 
-### Bill of materials
+The difficulty affects the speed of the LED sequence, the allowed reaction time, and the complexity of the melody. Easy mode uses slower tempos and simpler patterns, while Medium and Hard modes progressively increase the speed and reduce the time window for user input. The selected difficulty and song are displayed on a 16×2 LCD, which also shows real-time information such as the current score and remaining lives during gameplay.
 
-Car:
+From a software perspective, the project focuses on core embedded systems concepts such as non-blocking timing using millis(), array-based data structures for storing melodies and patterns and real-time user input handling.
+
+Bill of materials:
 
 * Arduino Uno
-* Robot chassis
-* 2 × DC motors
-* 2 × wheels
-* Ball caster
-* Motor driver (L293D)
-* Infrared reflectance sensors (line detection)
+* LEDs (Red, Green, Blue, Yellow - acting as "tiles")
+* Push Buttons (Player input)
+* Joystick
+* Buzzer (for melody and audio feedback)
+* LCD Display 16×2
+* Resistors (220Ω for LEDs, 10kΩ for buttons)
 * Breadboard
-* Battery pack
-* Potentiometer
-* Jumper wires, zip ties
+* Jumper wires
 
-Speed Monitoring Station
+### System Description
 
-* Arduino Uno
-* 2 × IR sensors (used as passage detectors)
-* LCD display (16×2 or similar)
-* Joystick module
-* Red LED
-* Green LED
-* Buzzer
-* Resistors and jumper wires
+The system consists of the hardware console (Arduino, LEDs, buttons, LCD display, and buzzer) and the embedded software running on the microcontroller. The user (player) and the external power source (USB or battery) are considered outside the system boundary. Interaction with the user is achieved through visual and audio outputs, while input is received through buttons and the joystick.
 
-Q1 – What is the system boundary?
+All intelligence is implemented locally on the Arduino microcontroller. The system does not depend on a PC or any cloud connection. The Arduino handles the entire game loop, including melody playback, pattern generation (random or predefined), reaction time measurement using internal timers, and real-time updates of score and difficulty.
 
-The system consists of the mobile robot and the fixed monitoring station with their sensors and controllers, while the user and the environment are outside the system boundary.
+### Technical Challenges and Demo
 
-Q2 – Where does intelligence live?
+The main technical challenge of the project is implementing non-blocking, asynchronous logic. Unlike simple projects that rely on the delay() function, this game must perform several tasks simultaneously: playing musical notes, controlling LED timing and continuously scanning button inputs. This is achieved using millis()-based timing logic, which ensures responsive gameplay and smooth audio output.
 
-Intelligence lives on the device, specifically on the Arduino microcontroller embedded in each unit. The robot and the monitoring station function independently. Each one processes its own sensor data locally to execute real-time decisions, without relying on an external computer or cloud processing.
+The minimum functional demo includes selecting a song from the menu, correctly synchronizing the LED patterns with the buzzer melody and accurately detecting a “Hit” (score increase) or a “Miss” (life lost) based on the user’s input.
 
-Q3 – What is the hardest technical problem?
+### Project scope
 
-The hardest technical problem is timing. Accurate speed calculation relies on the precise detection of the robot passing the IR sensors. Since the measurement distance is short, even a few milliseconds of delay in sensor response or code execution can result in significant errors in the final speed readout.
+This project is more complex than a basic tutorial because it combines several hardware and software components into one functional game. Unlike simple examples that only turn on an LED or play a sound, this project includes a menu system, multiple difficulty levels and different melodies. The game logic is organized using a Finite State Machine, which controls the flow of the game. 
 
-Q4 – What is the minimum demo?
-
-The minimum demo is the robot passing the monitored section and the system correctly detecting the speed and triggering an alert when the limit is exceeded.
-
-Q5 – Why is this not just a tutorial?
-
-This project is not a tutorial because it involves combining and adapting distinct systems. While the standard laboratory guide was used for the robot’s chassis, the software was adapted to include manual analog throttle control, a feature not present in the original design. Additionally, the project introduces a custom speed monitoring system with its own sensing logic and user interface, moving beyond simple component wiring to create an interactive simulation.
-
-
+Overall, the project shows how simple electronic components can be used together to create a complete interactive embedded game with clear rules for winning and losing.
