@@ -1,5 +1,9 @@
 ## Arduino Interactive Music Console
 
+<p>
+  <img src="setup_finalProject.jpeg" alt="Setup Picture" width="400"/>
+</p>
+
 This project implements a multifunctional interactive music console built on the Arduino platform. The system combines elements of digital musical instruments, educational software and rhythm-based games into a single embedded application. Unlike a classic rhythm game, the project offers three distinct operating modes: Free Play, Learn Mode, and Gameplay Mode, each targeting a different user interaction style and learning objective.
 
 The console is designed to be fully self-contained, with all logic executed locally on the Arduino microcontroller. User interaction is achieved through a combination of physical buttons, a joystick, LEDs, an LCD display and a buzzer used for audio output.
