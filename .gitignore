@@ -1,0 +1,7 @@
+*.tmp
+*.log
+*.bak
+*.swp
+.DS_Store
+.vscode/
+build/
