@@ -1,14 +1,8 @@
-## Arduino Rhythm Game
+## Arduino Interactive Music Console
 
-This project implements an interactive embedded gaming console inspired by rhythm-based games such as Piano Tiles and Guitar Hero. The goal of the system is to test the user’s reflexes and synchronization skills using a combination of visual and audio feedback.
+This project implements a multifunctional interactive music console built on the Arduino platform. The system combines elements of digital musical instruments, educational software and rhythm-based games into a single embedded application. Unlike a classic rhythm game, the project offers three distinct operating modes: Free Play, Learn Mode, and Gameplay Mode, each targeting a different user interaction style and learning objective.
 
-The console is built around a linear array of LEDs, each associated with a push button. During gameplay, the system generates a sequence of visual cues by lighting up the LEDs in synchronization with a musical melody played through a buzzer. The player must press the correct button within a predefined time window in order to score points. If the input is incorrect or too late, the player loses a life.
-
-The software architecture is based on a Finite State Machine, which manages the main game states: Menu, Gameplay and Game Over. In the Menu state, the user selects the desired difficulty level: Easy, Medium or Hard. Each difficulty level corresponds to a different set of melodies and gameplay parameters.
-
-The difficulty affects the speed of the LED sequence, the allowed reaction time, and the complexity of the melody. Easy mode uses slower tempos and simpler patterns, while Medium and Hard modes progressively increase the speed and reduce the time window for user input. The selected difficulty and song are displayed on a 16×2 LCD, which also shows real-time information such as the current score and remaining lives during gameplay.
-
-From a software perspective, the project focuses on core embedded systems concepts such as non-blocking timing using millis(), array-based data structures for storing melodies and patterns and real-time user input handling.
+The console is designed to be fully self-contained, with all logic executed locally on the Arduino microcontroller. User interaction is achieved through a combination of physical buttons, a joystick, LEDs, an LCD display and a buzzer used for audio output.
 
 Bill of materials:
 
@@ -17,25 +11,81 @@ Bill of materials:
 * Push Buttons (Player input)
 * Joystick
 * Buzzer (for melody and audio feedback)
-* LCD Display 16×2
+* 16×2 LCD Display
 * Resistors (220Ω for LEDs, 10kΩ for buttons)
 * Breadboard
 * Jumper wires
 
-### System Description
+### System Overview
 
-The system consists of the hardware console (Arduino, LEDs, buttons, LCD display, and buzzer) and the embedded software running on the microcontroller. The user (player) and the external power source (USB or battery) are considered outside the system boundary. Interaction with the user is achieved through visual and audio outputs, while input is received through buttons and the joystick.
+The hardware interface consists of 4 push buttons, each associated with an LED and a musical note. The LEDs provide visual feedback, while the buzzer generates sound based on predefined frequencies. A joystick is used for navigation, octave selection and menu interaction. A 16×2 LCD display presents menus, real-time status information and instructional feedback.
 
-All intelligence is implemented locally on the Arduino microcontroller. The system does not depend on a PC or any cloud connection. The Arduino handles the entire game loop, including melody playback, pattern generation (random or predefined), reaction time measurement using internal timers, and real-time updates of score and difficulty.
+The system is structured around a Finite State Machine (FSM) that manages transitions between the main operating modes:
 
-### Technical Challenges and Demo
+* Menu
+* Free Play
+* Learn Mode
+* Gameplay Mode
+* End states (Win / Game Over)
 
-The main technical challenge of the project is implementing non-blocking, asynchronous logic. Unlike simple projects that rely on the delay() function, this game must perform several tasks simultaneously: playing musical notes, controlling LED timing and continuously scanning button inputs. This is achieved using millis()-based timing logic, which ensures responsive gameplay and smooth audio output.
+Each mode is implemented as a separate software component, improving modularity  and extensibility.
 
-The minimum functional demo includes selecting a song from the menu, correctly synchronizing the LED patterns with the buzzer melody and accurately detecting a “Hit” (score increase) or a “Miss” (life lost) based on the user’s input.
+### Operating Modes
 
-### Project scope
+1. Free Play Mode
 
-This project is more complex than a basic tutorial because it combines several hardware and software components into one functional game. Unlike simple examples that only turn on an LED or play a sound, this project includes a menu system, multiple difficulty levels and different melodies. The game logic is organized using a Finite State Machine, which controls the flow of the game. 
+Free Play mode turns the console into a small digital musical instrument. Each button corresponds to a note, and the user can freely improvise melodies in real time.
 
-Overall, the project shows how simple electronic components can be used together to create a complete interactive embedded game with clear rules for winning and losing.
+Key features:
+
+* Multiple octaves selectable via joystick
+* Different sound effects (Normal, Vibrato, Staccato)
+* Sustain functionality
+* Loop recording and playback
+* Real-time feedback on the LCD display
+
+This mode focuses on creative exploration, allowing the user to experiment with sound without any constraints or scoring logic.
+
+2. Learn Mode
+
+Learn Mode is an educational mode designed to help users learn simple melodies step by step. The system guides the player by illuminating the correct LED and displaying the required octave on the LCD.
+
+Key features:
+
+* Song selection menu
+* Step-by-step melody progression
+* Visual guidance using LEDs
+* Octave matching using joystick control
+* Audio feedback only when a note is played incorrectly
+* Automatic progression when the correct note is played
+
+This mode emphasizes musical learning and muscle memory, rather than speed or scoring.
+
+3. Gameplay Mode
+
+Gameplay Mode introduces a reflex-based rhythm game inspired by titles such as Piano Tiles. The player must react quickly to visual cues and press the correct button within a limited time window.
+
+Key features:
+
+* Song selection before gameplay
+* Countdown timer (3…2…1) before the song starts
+* LED-based visual cues synchronized with the melody
+* Time-limited reaction window for each note
+* Life-based failure system
+* Win and Game Over states with dedicated LCD messages
+
+Unlike traditional rhythm games, the melody is not played automatically in full; instead, the player’s correct input triggers the sound, reinforcing timing accuracy and active participation.
+
+### Software Architecture
+The project relies heavily on non-blocking programming techniques using millis() instead of delay(). This allows the system to: update leds, monitor button input, handle audio playback, update the LCD, all simultaneously and without freezing the game loop.
+
+Melodies are stored in array-based data structures, and timing constraints are managed using timestamp comparisons. Each mode encapsulates its own logic, while the main game engine coordinates state transitions.
+
+### Technical challenges
+The primary challenge of the project lies in coordinating multiple asynchronous tasks on a resource-constrained microcontroller. Implementing accurate timing without blocking delays was essential for responsive gameplay and correct audio-visual synchronization.
+
+### Project scope and educational value
+
+This project goes beyond a simple Arduino demonstration by integrating sound synthesis, user interaction, real-time input handling and structured game logic into a cohesive system. The inclusion of multiple modes makes the console suitable for both entertainment and learning, demonstrating how embedded systems can support complex interactive applications.
+
+Overall, the project illustrates how fundamental electronic components and efficient software design can be combined to create a complete, interactive embedded music platform with clear rules, feedback mechanisms and extensibility potential.
